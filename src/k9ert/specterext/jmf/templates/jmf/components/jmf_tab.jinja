@@ -1,0 +1,8 @@
+{% extends "jmf/base.jinja" %}
+{% block main %}
+    <img src="{{ url_for(service.id +'_endpoint' + '.static', filename=service.logo) }}" width="300"/>    
+    {% from 'jmf/components/jmf_menu.jinja' import jmf_menu with context %}
+    {{ jmf_menu(tab) }}
+    {% block content %}
+    {% endblock %}
+{% endblock %}

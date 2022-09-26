@@ -1,0 +1,5 @@
+recursive-include src/k9ert/specterext/jmf/templates *
+recursive-include src/k9ert/specterext/jmf/static *
+recursive-include src/k9ert/specterext/jmf/*/LC_MESSAGES *.mo
+recursive-include src/k9ert/specterext/jmf/translations/*/LC_MESSAGES *.po
+include requirements.txt

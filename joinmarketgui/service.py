@@ -17,7 +17,7 @@ from cryptoadvance.specter.wallet import Wallet
 logger = logging.getLogger(__name__)
 
 
-class JoinmarketguiService(Service):
+class JmfService(Service):
     id = "joinmarketgui"
     name = "Joinmarket GUI"
     icon = "joinmarketgui/img/joinmarket.png"
