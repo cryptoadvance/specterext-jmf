@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'jmf/layout.html' %}
 {% block title %}Unlock{% endblock %}
 {% block content %}
 <h2 class="text-center mb-3">Unlock wallet</h2>
@@ -11,7 +11,7 @@
 				{% endfor %}
 			{% endif %}
 		{% endwith %}
-		<form id="wallet-unlock-form" action="/svc/joinmarketgui/unlock" method="POST">
+		<form id="wallet-unlock-form" action="/svc/jmf/unlock" method="POST">
 			<select class="form-select" aria-label="Select wallet" id="select-wallet" name="walletname">
 				{% for wallet in wallets %}
 				<option value={{wallet}}>{{wallet}}</option>
@@ -22,7 +22,7 @@
 			</div>
 			<button type="submit" class="btn btn-primary" style="width: 100%">Unlock</button>
 		</form>
-		<a class="btn btn-outline-primary mt-2" style="width: 100%" href="/create">Create a wallet</a>
+		<a class="btn btn-outline-primary mt-2" style="width: 100%" href="{{ url_for(service.id +'_endpoint.create')}}">Create a wallet</a>
 	</div>
 </div>
 {% endblock %}

@@ -103,7 +103,9 @@ def setSettings(form):
 
 def is_backend_down():
 	try:
+		print("YES")
 		r = req.get(API_URL + '/wallet/all', verify=CERT)
+		print(r)
 		return r.status_code != 200
 	except:
 		return True
@@ -111,6 +113,8 @@ def is_backend_down():
 
 def is_wallet_locked():
 	r = req.get(API_URL + '/session', verify=CERT).json()
+	if r['wallet_name'] == 'None':
+		logger.debug("Wallet is locked!") 
 	return r['wallet_name'] == 'None'
 
 def is_token_present():
@@ -129,7 +133,7 @@ def index():
 def index_pure():
 	logger.error("------------------backend down on API_URL "+API_URL)
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 	
 	if is_wallet_locked():
 		return redirect(url_for('jmf_endpoint.unlock'))
@@ -139,14 +143,14 @@ def index_pure():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 
 @jmf_endpoint.route("/unlock", methods=['GET', 'POST'])
 @app.csrf.exempt
 def unlock():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if request.method == 'GET':
 		if not is_wallet_locked():
@@ -163,7 +167,7 @@ def unlock():
 			'wallets': listWallets
 		}
 		# render unlock page with list of wallets in <select>
-		return render_template('unlock.html', **templateData)
+		return render_template('jmf/unlock.html', **templateData)
 	else:
 		# POST request to unlock wallet
 		walletName = request.form['walletname']
@@ -187,11 +191,11 @@ def unlock():
 @app.csrf.exempt
 def create():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if request.method == 'GET':
 		if is_wallet_locked():
-			return render_template('create.html')
+			return render_template('jmf/create.html')
 		return redirect(url_for('jmf_endpoint.index'))
 
 	else: # handle POST request
@@ -206,12 +210,13 @@ def create():
 			set_token(token)
 			flash("Wallet created successfully!", category="success")
 			return redirect(url_for('jmf_endpoint.balance'))
+		return render_template('jmf/error.html', error=r)
 
 @jmf_endpoint.route("/balance")
 @app.csrf.exempt
 def balance():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('jmf_endpoint.unlock'))
@@ -220,7 +225,7 @@ def balance():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	r = req.get(API_URL + '/session', verify=CERT).json()
 	walletName = r['wallet_name']
@@ -245,7 +250,7 @@ def balance():
 			'yg_running': makerRunning,
 			'coinjoin_running': coinjoinRunning,
 		}
-		return render_template('balance.html', **templateData)
+		return render_template('jmf/balance.html', **templateData)
 	else:
 		print(r)
 		return r.json()
@@ -253,7 +258,7 @@ def balance():
 @jmf_endpoint.route("/lock")
 def lock():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('jmf_endpoint.unlock'))
@@ -272,7 +277,7 @@ def lock():
 @jmf_endpoint.route("/deposit")
 def deposit(address=None):
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('jmf_endpoint.unlock'))
@@ -281,7 +286,7 @@ def deposit(address=None):
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	if address == None:
 		r = req.get(API_URL + '/session', verify=CERT).json()
@@ -294,25 +299,25 @@ def deposit(address=None):
 				'wallet_unlocked': True,
 				'address': r.json()['address']
 			}
-			return render_template('deposit.html', **templateData)
+			return render_template('jmf/deposit.html', **templateData)
 		else:
 			return r.json()
 	else:
 		templateData = {
 			'address': address
 		}
-		return render_template('deposit.html', **templateData)
+		return render_template('jmf/deposit.html', **templateData)
 
 @jmf_endpoint.route("/withdraw", methods=['GET', 'POST'])
 def withdraw():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if not is_token_present():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	if request.method == 'GET':
 		if is_wallet_locked():
@@ -321,7 +326,7 @@ def withdraw():
 		templateData = {
 			'wallet_unlocked': True
 		}
-		return render_template('withdraw.html', **templateData)
+		return render_template('jmf/withdraw.html', **templateData)
 	else:
 		r = req.get(API_URL + '/session', verify=CERT).json()
 		walletName = r['wallet_name']
@@ -339,7 +344,7 @@ def withdraw():
 @jmf_endpoint.route("/yg")
 def yg():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('jmf_endpoint.unlock'))
@@ -348,7 +353,7 @@ def yg():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	r = req.get(API_URL + '/session', verify=CERT).json()
 	walletName = r['wallet_name']
@@ -371,7 +376,7 @@ def yg():
 		'fb_exists': fb_sats > 0,
 		'yg_running': makerRunning
 	}
-	return render_template('yg.html', **templateData)
+	return render_template('jmf/yg.html', **templateData)
 
 @jmf_endpoint.route("/getfbaddress", methods=['POST'])
 def getfbaddress():
@@ -388,7 +393,7 @@ def getfbaddress():
 		templateData = {
 			"error": "Can't create Fidelity bond. Error code:" + str(r.status_code)
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 @jmf_endpoint.route("/start-yg", methods=['POST'])
 @app.csrf.exempt
@@ -423,13 +428,13 @@ def stopYG():
 @jmf_endpoint.route("/coinjoin", methods=['GET', 'POST'])
 def coinjoin():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if not is_token_present():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	if request.method == 'GET':
 		if is_wallet_locked():
@@ -438,7 +443,7 @@ def coinjoin():
 		templateData = {
 			'wallet_unlocked': True,	
 		}
-		return render_template('coinjoin.html', **templateData)
+		return render_template('jmf/coinjoin.html', **templateData)
 	else:
 		r = req.get(API_URL + '/session', verify=CERT).json()
 		walletName = r['wallet_name']
@@ -468,7 +473,7 @@ def get_qr_code():
 @jmf_endpoint.route("/settings", methods=['GET', 'POST'])
 def settings():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('unlock'))
@@ -477,7 +482,7 @@ def settings():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	settingsDict = {
 		# 'DAEMON': ['no_daemon', 'daemon_port', 'daemon_host', 'use_ssl'],
@@ -501,12 +506,12 @@ def settings():
 		'settings': settingsData,
 		'wallet_unlocked': True
 	}
-	return render_template('settings.html', **templateData)
+	return render_template('jmf/settings.html', **templateData)
 
 @jmf_endpoint.route("/showseed")
 def showseed():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('unlock'))
@@ -515,7 +520,7 @@ def showseed():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	r = req.get(API_URL + '/session', verify=CERT).json()
 	walletName = r['wallet_name']
@@ -527,12 +532,12 @@ def showseed():
 		'seedphrase': seedphrase,
 		'wallet_unlocked': True
 	}
-	return render_template('seed.html', **templateData)
+	return render_template('jmf/seed.html', **templateData)
 
 @jmf_endpoint.route("/utxos")
 def utxos():
 	if is_backend_down():
-		return render_template('error.html')
+		return render_template('jmf/error.html')
 
 	if is_wallet_locked():
 		return redirect(url_for('unlock'))
@@ -541,7 +546,7 @@ def utxos():
 		templateData = {
 			'error': 'Session token missing. Joinmarket GUI is already open from another browser.'
 		}
-		return render_template('error.html', **templateData)
+		return render_template('jmf/error.html', **templateData)
 
 	r = req.get(API_URL + '/session', verify=CERT).json()
 	walletName = r['wallet_name']
@@ -553,9 +558,9 @@ def utxos():
 		'wallet_unlocked': True
 	}
 	# return r.json()['utxos']
-	return render_template('utxos.html', **templateData)
+	return render_template('jmf/utxos.html', **templateData)
 
 @jmf_endpoint.errorhandler(404)
 def not_found(e):
-	return render_template('404.html')
+	return render_template('jmf/404.html')
 

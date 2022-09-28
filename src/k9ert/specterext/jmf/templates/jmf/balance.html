@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'jmf/layout.html' %}
 {% block title %}Balance{% endblock %}
 {% block content %}
 <h2 class="text-center mb-3">Balance</h2>
@@ -43,10 +43,10 @@
 {% endif %}
 <div class="row">
 	<div class="col text-center">
-		<a class="btn btn-primary mt-3" style="width: 10em" href="/deposit">Deposit</a>
+		<a class="btn btn-primary mt-3" style="width: 10em" href="{{ url_for(service.id +'_endpoint.deposit')}}">Deposit</a>
 
 		{% if not total_balance_sats == '0'  %}
-		<a class="btn btn-outline-primary mt-3 ms-2" style="width: 10em" href="/withdraw">Withdraw</a>
+		<a class="btn btn-outline-primary mt-3 ms-2" style="width: 10em" href="{{ url_for(service.id +'_endpoint.withdraw')}}">Withdraw</a>
 		<br/>
 		{% endif %}
 
@@ -65,7 +65,7 @@
 			</a>
 			{% endif %}
 			{% if coinjoin_running %}
-			<a href="/coinjoin" class="btn btn-outline-warning mt-3 ms-1" style="width: 10em;" data-bs-toggle="tooltip" data-bs-placement="top" title="Running">
+			<a href="{{ url_for(service.id +'_endpoint.coinjoin')}}" class="btn btn-outline-warning mt-3 ms-1" style="width: 10em;" data-bs-toggle="tooltip" data-bs-placement="top" title="Running">
 				Coinjoin
 				<span class="position-absolute top-0 start-100 translate-middle p-2 badge rounded-circle bg-danger">
 				</span>

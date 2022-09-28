@@ -18,14 +18,14 @@ logger = logging.getLogger(__name__)
 
 
 class JmfService(Service):
-    id = "joinmarketgui"
+    id = "jmf"
     name = "Joinmarket GUI"
-    icon = "joinmarketgui/img/joinmarket.png"
-    logo = "joinmarketgui/img/joinmarket.png"
+    icon = "jmf/img/joinmarket.png"
+    logo = "jmf/img/joinmarket.png"
     desc = "A GUI for joinmarket"
     has_blueprint = True
     devstatus = devstatus_alpha
-    blueprint_module = "joinmarketgui.controller"
+    blueprint_module = "jmf.controller"
 
     sort_priority=5
     

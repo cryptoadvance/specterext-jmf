@@ -1,11 +1,11 @@
-{% extends 'layout.html' %}
+{% extends 'jmf/layout.html' %}
 {% block title %}Yield generator{% endblock %}
 {% block content %}
 <h2 class="text-center mb-3">Yield generator</h2>
 <div class="row">
 	<div class="col-lg-6 offset-lg-3 col-sm-12">
 		{% if not fb_exists %}
-		<form id="get-fb-address" action="/svc/joinmarketgui/getfbaddress" method="POST">
+		<form id="get-fb-address" action="/svc/jmf/getfbaddress" method="POST">
 			<label>Year (YYYY)</label>
 			<input type="number" name="lockdate-year" class="form-control mb-3" required>
 			<label>Month (mm)</label>
@@ -14,7 +14,7 @@
 		</form>
 		{% elif not yg_running %}
 		<p class="h3 text-center">Fidelity Bond: {{fb_sats}} sats</p>
-		<form id="start-yg" action="/svc/joinmarketgui/start-yg" method="POST">
+		<form id="start-yg" action="/svc/jmf/start-yg" method="POST">
 			<label>Coinjoin fee rate in %</label>
 			<input type="text" name="cjfee_r" value="0.002" required class="form-control mb-3">
 			<button type="submit" class="btn btn-primary" style="width: 100%">Start Yield Generator</button>

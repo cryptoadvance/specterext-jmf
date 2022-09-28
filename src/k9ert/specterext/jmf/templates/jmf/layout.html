@@ -17,7 +17,7 @@
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="/">Joinmarket</a>
+				<a class="navbar-brand" href="{{ url_for(service.id +'_endpoint.index')}}">Joinmarket</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
@@ -25,19 +25,19 @@
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						{% if wallet_unlocked %}
 						<li class="nav-item">
-							<a class="nav-link" href="/balance">Balance</a>
+							<a class="nav-link" href="{{ url_for(service.id +'_endpoint.balance')}}">Balance</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/utxos">UTXOs</a>
+							<a class="nav-link" href="{{ url_for(service.id +'_endpoint.utxos')}}">UTXOs</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/settings">Settings</a>
+							<a class="nav-link" href="{{ url_for(service.id +'_endpoint.settings')}}">Settings</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/showseed">Seed phrase</a>
+							<a class="nav-link" href="{{ url_for(service.id +'_endpoint.showseed')}}">Seed phrase</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/lock">Lock</a>
+							<a class="nav-link" href="{{ url_for(service.id +'_endpoint.lock')}}">Lock</a>
 						</li>
 						{% endif %}
 					</ul>
@@ -52,8 +52,8 @@
 				<div class="col text-center">
 					<small>
 						<span>v0.4.1 | </span>
-						<a href="https://github.com/manasgandy/joinmarket-gui" target="_blank">Contribute</a> | 
-						<a href="/about">About</a>
+						<a href="https://github.com/cryptoadvance/specterext-jmf" target="_blank">Contribute</a> | 
+						<a href="{{ url_for('index')}}">Get Back To Specter</a>
 					</small>
 				</div>
 			</div>
